@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">
+
+<i class="bi bi-pencil-square text-success"></i>
+
+Edit Insulin Record
+
+</h2>
+
+<div class="card form-card">
+
+<div class="card-body">
+
+<form method="POST">
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Units
+
+</label>
+
+<input
+type="number"
+step="0.1"
+name="units"
+class="form-control"
+value="{{ log.units }}"
+required>
+
+</div>
+
+<div class="mb-4">
+
+<label class="form-label">
+
+Insulin Type
+
+</label>
+
+<select
+name="type"
+class="form-select">
+
+<option value="Rapid Acting" {% if log.insulin_type=="Rapid Acting" %}selected{% endif %}>Rapid Acting</option>
+
+<option value="Short Acting" {% if log.insulin_type=="Short Acting" %}selected{% endif %}>Short Acting</option>
+
+<option value="Intermediate" {% if log.insulin_type=="Intermediate" %}selected{% endif %}>Intermediate</option>
+
+<option value="Long Acting" {% if log.insulin_type=="Long Acting" %}selected{% endif %}>Long Acting</option>
+
+</select>
+
+</div>
+
+<button class="btn btn-primary">
+
+Save Changes
+
+</button>
+
+<a
+href="/insulin"
+class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

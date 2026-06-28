@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">
+
+Edit Glucose
+
+</h2>
+
+<div class="card form-card">
+
+<div class="card-body">
+
+<form method="POST">
+
+<div class="mb-4">
+
+<label>
+
+Blood Glucose
+
+</label>
+
+<input
+
+type="number"
+
+name="glucose"
+
+class="form-control"
+
+value="{{ log.glucose_level }}"
+
+required>
+
+</div>
+
+<button
+
+class="btn btn-primary">
+
+Update
+
+</button>
+
+<a
+
+href="/glucose"
+
+class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

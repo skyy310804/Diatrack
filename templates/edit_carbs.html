@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">
+
+<i class="bi bi-pencil-square text-warning"></i>
+
+Edit Carbohydrate Record
+
+</h2>
+
+<div class="card form-card">
+
+<div class="card-body">
+
+<form method="POST">
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Carbohydrates (g)
+
+</label>
+
+<input
+type="number"
+name="carbs"
+class="form-control"
+value="{{ log.carbs }}"
+required>
+
+</div>
+
+<div class="mb-4">
+
+<label class="form-label">
+
+Meal
+
+</label>
+
+<select
+name="meal"
+class="form-select">
+
+<option {% if log.meal=="Breakfast" %}selected{% endif %}>Breakfast</option>
+<option {% if log.meal=="Lunch" %}selected{% endif %}>Lunch</option>
+<option {% if log.meal=="Dinner" %}selected{% endif %}>Dinner</option>
+<option {% if log.meal=="Snack" %}selected{% endif %}>Snack</option>
+
+</select>
+
+</div>
+
+<button
+class="btn btn-primary">
+
+Save Changes
+
+</button>
+
+<a
+href="/carbs"
+class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

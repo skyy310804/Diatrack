@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-header mb-4">
+
+    <h2>
+        <i class="bi bi-droplet-fill text-primary"></i>
+        Glucose Tracker
+    </h2>
+
+    <p class="text-muted">
+        Record and monitor your blood glucose readings.
+    </p>
+
+</div>
+
+<div class="card tracker-card mb-4">
+
+    <div class="card-body">
+
+        <form method="POST">
+
+    <div class="row g-3 align-items-center">
+
+        <div class="col-md-9">
+            <input
+                type="number"
+                name="glucose"
+                class="form-control"
+                placeholder="Enter Blood Glucose (mg/dL)"
+                required>
+        </div>
+
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-plus-circle"></i>
+                Add Reading
+            </button>
+        </div>
+
+    </div>
+
+</form>
+
+    </div>
+
+</div>
+
+{% if logs %}
+
+{% for log in logs %}
+
+<div class="card tracker-record mb-3">
+
+    <div class="card-body">
+
+        <div class="row align-items-center">
+
+            <div class="col-lg-3">
+
+                {% if log.glucose_level < 70 %}
+
+                    <span class="badge bg-warning fs-6">
+
+                        {{ log.glucose_level }} mg/dL
+
+                    </span>
+
+                {% elif log.glucose_level <= 180 %}
+
+                    <span class="badge bg-success fs-6">
+
+                        {{ log.glucose_level }} mg/dL
+
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-danger fs-6">
+
+                        {{ log.glucose_level }} mg/dL
+
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+            <div class="col-lg-3">
+
+                {{ log.recorded_at.strftime("%B %d, %Y") }}
+
+            </div>
+
+            <div class="col-lg-3">
+
+                {{ log.recorded_at.strftime("%I:%M %p") }}
+
+            </div>
+
+            <div class="col-lg-3 text-end">
+
+                <a
+                    href="/edit-glucose/{{ log.id }}"
+                    class="btn btn-outline-warning btn-sm">
+
+                    <i class="bi bi-pencil"></i>
+
+                </a>
+
+                <a
+                    href="/delete-glucose/{{ log.id }}"
+                    class="btn btn-outline-danger btn-sm">
+
+                    <i class="bi bi-trash"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="card tracker-record">
+
+    <div class="card-body text-center py-5">
+
+        <i class="bi bi-droplet display-2 text-primary"></i>
+
+        <h4 class="mt-3">
+
+            No Glucose Records
+
+        </h4>
+
+        <p class="text-muted">
+
+            Your glucose history will appear here.
+
+        </p>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

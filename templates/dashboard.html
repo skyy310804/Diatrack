@@ -1,0 +1,679 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- ========================================= -->
+<!-- Welcome -->
+<!-- ========================================= -->
+
+<div class="welcome mb-4">
+
+    <h1 class="welcome-title">
+        Welcome Back,
+        <span>{{ user.first_name }}</span> 👋
+    </h1>
+
+    <p class="welcome-subtitle">
+        Here's your Dashboard overview for today.
+    </p>
+
+</div>
+
+<!-- ========================================= -->
+<!-- KPI Cards -->
+<!-- ========================================= -->
+
+<div class="dashboard-grid">
+
+    <!-- Average Glucose -->
+    <div class="card stat-card">
+        <div>
+            <h6>Average Glucose</h6>
+            <h2>{{ avg_glucose }}</h2>
+            <small>mg/dL</small>
+        </div>
+
+        <i class="bi bi-droplet-fill dashboard-icon text-primary"></i>
+    </div>
+
+    <!-- Latest Glucose -->
+    <div class="card stat-card">
+        <div>
+            <h6>Latest Glucose</h6>
+            <h2>{{ today_glucose }}</h2>
+            <small>mg/dL</small>
+        </div>
+
+        <i class="bi bi-droplet-half dashboard-icon text-info"></i>
+    </div>
+
+    <!-- Total Carbs -->
+    <div class="card stat-card">
+        <div>
+            <h6>Total Carbs</h6>
+            <h2>{{ total_carbs }}</h2>
+            <small>grams</small>
+        </div>
+
+        <i class="bi bi-cup-hot-fill dashboard-icon text-warning"></i>
+    </div>
+
+    <!-- Total Insulin -->
+    <div class="card stat-card">
+        <div>
+            <h6>Total Insulin</h6>
+            <h2>{{ total_insulin }}</h2>
+            <small>Units</small>
+        </div>
+
+        <i class="bi bi-capsule-pill dashboard-icon text-success"></i>
+    </div>
+
+    <!-- Total Logs -->
+    <div class="card stat-card">
+        <div>
+            <h6>Total Records</h6>
+            <h2>{{ chart_values|length }}</h2>
+            <small>Logs</small>
+        </div>
+
+        <i class="bi bi-journal-check dashboard-icon text-secondary"></i>
+    </div>
+
+    <!-- Health Score -->
+    <div class="card stat-card">
+        <div>
+            <h6>Health Score</h6>
+            <h2>{{ health_score }}/100</h2>
+            <small>Overall</small>
+        </div>
+
+        <i class="bi bi-heart-pulse-fill dashboard-icon text-danger"></i>
+    </div>
+
+    <!-- Time in Range -->
+    <div class="card stat-card">
+        <div>
+            <h6>Time in Range</h6>
+            <h2>{{ time_in_range }}%</h2>
+            <small>70–180 mg/dL</small>
+        </div>
+
+        <i class="bi bi-bullseye dashboard-icon text-success"></i>
+    </div>
+
+    <!-- Trend -->
+    <div class="card stat-card">
+        <div>
+            <h6>Trend</h6>
+            <h2>{{ trend }}</h2>
+            <small>{{ risk }}</small>
+        </div>
+
+        <i class="bi bi-activity dashboard-icon text-primary"></i>
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- Weekly Summary & Medical Status -->
+<!-- ========================================= -->
+
+<div class="row mt-4">
+
+    <!-- Weekly Summary -->
+    <div class="col-lg-6">
+
+        <div class="card graph-card h-100">
+
+            <div class="card-body">
+
+                <h3>
+    <i class="bi bi-calendar-week-fill text-primary"></i>
+    Weekly Summary
+</h3>
+                <hr>
+
+                <div class="summary-row">
+    <span>
+        <i class="bi bi-journal-medical text-primary"></i>
+        Total Glucose Logs
+    </span>
+
+    <strong>{{ total_logs }}</strong>
+</div>
+
+<div class="summary-row">
+    <span>
+        <i class="bi bi-droplet-fill text-primary"></i>
+        Average Glucose
+    </span>
+
+    <strong>{{ avg_glucose }} mg/dL</strong>
+</div>
+
+<div class="summary-row">
+    <span>
+        <i class="bi bi-graph-up-arrow text-success"></i>
+        Highest Reading
+    </span>
+
+    <strong>{{ highest_glucose }} mg/dL</strong>
+</div>
+
+<div class="summary-row">
+    <span>
+        <i class="bi bi-graph-down-arrow text-danger"></i>
+        Lowest Reading
+    </span>
+
+    <strong>{{ lowest_glucose }} mg/dL</strong>
+</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Medical Status -->
+    <div class="col-lg-6">
+
+        <div class="card graph-card h-100">
+
+            <div class="card-body">
+
+                <h4>Medical Status</h4>
+
+                <hr>
+
+                {% if avg_glucose == 0 %}
+
+                    <div class="status-card secondary">
+                        No glucose data available.
+                    </div>
+
+                {% elif avg_glucose < 70 %}
+
+                   <div class="status-banner warning">
+
+    <div class="status-icon">
+        ⚠️
+    </div>
+
+    <div class="status-text">
+
+        <h5>Below Target</h5>
+
+        <p>
+            Average glucose is below target.
+        </p>
+
+    </div>
+
+</div>
+
+                {% elif avg_glucose <= 180 %}
+
+                    <div class="status-card success">
+                        ✅ Glucose levels are within target range.
+                    </div>
+
+                {% else %}
+
+                    <div class="status-card danger">
+                        ⚠ Average glucose is above target.
+                    </div>
+
+                {% endif %}
+
+                <div class="mt-4">
+
+                    <div class="status-stats">
+
+    <div class="status-item">
+
+        <i class="bi bi-droplet-fill text-primary"></i>
+
+        <div>
+
+            <small>Current Average</small>
+
+            <h5>{{ avg_glucose }} mg/dL</h5>
+
+        </div>
+
+    </div>
+
+    <div class="status-item">
+
+        <i class="bi bi-cup-hot-fill text-warning"></i>
+
+        <div>
+
+            <small>Total Carbs</small>
+
+            <h5>{{ total_carbs }} g</h5>
+
+        </div>
+
+    </div>
+
+    <div class="status-item">
+
+        <i class="bi bi-capsule-pill text-success"></i>
+
+        <div>
+
+            <small>Total Insulin</small>
+
+            <h5>{{ total_insulin }} Units</h5>
+
+        </div>
+
+    </div>
+
+</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- Weekly Glucose Trend & Recent Activity -->
+<!-- ========================================= -->
+
+<div class="row mt-4 align-items-start">
+
+    <!-- Chart -->
+    <div class="col-lg-8 d-flex">
+
+    <div class="card graph-card flex-fill h-100">
+
+    <div class="card-body">
+
+        <h4 class="section-title">Weekly Glucose Trend</h4>
+
+        <p class="text-muted">
+            Blood glucose readings over the last 7 days.
+        </p>
+
+        <div style="height:300px;">
+            <canvas id="glucoseChart"></canvas>
+        </div>
+
+    </div>
+
+</div>
+</div>
+
+    <!-- Activity -->
+    <div class="col-lg-4 d-flex">
+
+        <div class="card graph-card flex-fill h-100">
+
+            <div class="card-body">
+
+                <h4>Recent Activity</h4>
+
+                <hr>
+
+                <div class="activity-list">
+                    
+                    {% if recent %}
+
+                        {% for item in recent %}
+
+                        <div class="activity-item">
+
+                            {% if item.glucose_level is defined %}
+
+                                <i class="bi bi-droplet-fill text-primary"></i>
+                                <strong>{{ item.glucose_level }} mg/dL</strong>
+
+                            {% elif item.carbs is defined %}
+
+                                <i class="bi bi-cup-hot-fill text-warning"></i>
+                                <strong>{{ item.carbs }} grams</strong>
+
+                            {% else %}
+
+                                <i class="bi bi-capsule-pill text-success"></i>
+                                <strong>{{ item.units }} Units</strong>
+
+                            {% endif %}
+
+                            <br>
+
+                            <small class="text-muted">
+                                {{ item.recorded_at.strftime("%b %d %I:%M %p") if item.recorded_at else "" }}
+                            </small>
+
+                        </div>
+
+                        <hr class="my-2">
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <p class="text-muted">
+                            No activity yet.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="card graph-card health-card mt-3">
+
+<div class="card-body">
+
+<h4 class="section-title">
+
+Health Insight
+
+</h4>
+
+<p>
+
+{{ recommendation }}
+
+</p>
+
+</div>
+
+</div>
+
+<hr class="my-5">
+
+<h3 class="section-title">
+Today's Statistics
+</h3>
+
+<div class="today-grid">
+
+<div class="card stat-card today-card">
+
+<div>
+
+<h6>Latest Glucose</h6>
+
+<h2>{{ today_glucose }}</h2>
+
+<small>mg/dL</small>
+
+</div>
+
+<i class="bi bi-droplet-half dashboard-icon text-primary"></i>
+
+</div>
+
+<div class="card stat-card today-card">
+
+<div>
+
+<h6>Latest Carbs</h6>
+
+<h2>{{ today_carbs }}</h2>
+
+<small>grams</small>
+
+</div>
+
+<i class="bi bi-cup-straw dashboard-icon text-warning"></i>
+
+</div>
+
+<div class="card stat-card today-card">
+
+<div>
+
+<h6>Latest Insulin</h6>
+
+<h2>{{ today_insulin }}</h2>
+
+<small>Units</small>
+
+</div>
+
+<i class="bi bi-capsule dashboard-icon text-success"></i>
+
+</div>
+
+</div>
+
+<div class="row mt-5">
+
+<div class="col-lg-4">
+
+<div class="card table-card flex-fill h-100">
+
+<div class="card-body">
+
+<h5 class="section-title">
+Recent Glucose
+</h5>
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>Level</th>
+
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for log in recent_glucose %}
+
+<tr>
+
+<td>{{ log.glucose_level }}</td>
+
+<td>{{ log.recorded_at.strftime("%b %d") }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-4">
+
+<div class="card table-card flex-fill h-100">
+
+<div class="card-body">
+
+<h5 class="section-title">
+Recent Carbs
+</h5>
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>Meal</th>
+
+<th>Carbs</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for log in recent_carbs %}
+
+<tr>
+
+<td>{{ log.meal }}</td>
+
+<td>{{ log.carbs }} g</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg-4">
+
+<div class="card table-card flex-fill h-100">
+
+<div class="card-body">
+
+<h5 class="section-title">
+Recent Insulin
+</h5>
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>Type</th>
+
+<th>Units</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for log in recent_insulin %}
+
+<tr>
+
+<td>{{ log.insulin_type }}</td>
+
+<td>{{ log.units }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const labels = {{ chart_labels | tojson }};
+const values = {{ chart_values | tojson }};
+
+const ctx = document.getElementById("glucoseChart");
+
+new Chart(ctx, {
+
+    type: "line",
+
+    data: {
+
+        labels: labels,
+
+        datasets: [{
+
+            data: values,
+
+            borderColor: "#2563eb",
+
+            backgroundColor: "rgba(37,99,235,0.15)",
+
+            fill: true,
+
+            tension: 0.4,
+
+            borderWidth: 3,
+
+            pointRadius: 5,
+
+            pointBackgroundColor: "#2563eb"
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        plugins: {
+
+            legend: {
+
+                display: false
+
+            }
+
+        },
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-header mb-4">
+
+    <h2>
+        <i class="bi bi-cup-hot-fill text-warning"></i>
+        Carbohydrate Tracker
+    </h2>
+
+    <p class="text-muted">
+        Record your daily carbohydrate intake.
+    </p>
+
+</div>
+
+<div class="card tracker-card mb-4">
+
+    <div class="card-body">
+
+        <form method="POST" class="tracker-form">
+
+           <form method="POST">
+
+    <div class="row g-3 align-items-end">
+
+        <!-- Carbohydrates -->
+        <div class="col-md-5">
+            <input
+                type="number"
+                name="grams"
+                class="form-control"
+                placeholder="Carbohydrates (grams)"
+                required>
+        </div>
+
+        <!-- Meal -->
+        <div class="col-md-4">
+            <select
+                name="meal"
+                class="form-select"
+                required>
+
+                <option value="Breakfast">Breakfast</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Dinner">Dinner</option>
+                <option value="Snack">Snack</option>
+
+            </select>
+        </div>
+
+        <!-- Button -->
+        <div class="col-md-3">
+            <button
+                type="submit"
+                class="btn btn-primary w-100">
+
+                <i class="bi bi-plus-circle"></i>
+                Save Meal
+
+            </button>
+        </div>
+
+    </div>
+
+</form>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% if logs %}
+
+{% for log in logs %}
+
+<div class="card tracker-record mb-3">
+
+<div class="card-body">
+
+<div class="row align-items-center">
+
+<div class="col-lg-3">
+
+<span class="badge bg-warning fs-6">
+
+🍚 {{ log.carbs }} g
+
+</span>
+
+</div>
+
+<div class="col-lg-3">
+
+{{ log.meal }}
+
+</div>
+
+<div class="col-lg-3">
+
+{{ log.recorded_at.strftime("%B %d, %Y %I:%M %p") }}
+
+</div>
+
+<div class="col-lg-3 text-end">
+
+<a
+href="/edit-carb/{{log.id}}"
+class="btn btn-outline-warning btn-sm">
+
+<i class="bi bi-pencil"></i>
+
+</a>
+
+<a
+href="/delete-carb/{{log.id}}"
+class="btn btn-outline-danger btn-sm">
+
+<i class="bi bi-trash"></i>
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="card tracker-record">
+
+<div class="card-body text-center py-5">
+
+<i class="bi bi-cup-hot-fill display-2 text-warning"></i>
+
+<h4>No Meal Records</h4>
+
+<p class="text-muted">
+
+Start logging your meals.
+
+</p>
+
+</div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}
